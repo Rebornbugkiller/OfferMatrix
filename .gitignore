@@ -1,0 +1,41 @@
+# Dependencies
+node_modules/
+vendor/
+
+# Build outputs
+dist/
+build/
+*.exe
+main
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Environment and config files with secrets
+backend/config.yaml
+backend/config.docker.yaml
+.env
+.env.*
+*.local
+
+# Claude Code
+.claude/
+
+# Temporary files
+temp_data.json
+nul
+daemon.json
+
+# Logs
+*.log
+logs/
+
+# Database data (Docker volumes)
+mysql_data/
