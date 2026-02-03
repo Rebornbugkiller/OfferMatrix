@@ -27,6 +27,7 @@ backend/config.docker.yaml
 
 # Claude Code
 .claude/
+CLAUDE.md
 
 # Temporary files
 temp_data.json
