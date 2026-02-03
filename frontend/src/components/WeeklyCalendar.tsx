@@ -18,7 +18,13 @@ const getEventColor = (interview: Interview): string => {
     return '#9ca3af'; // gray
   }
   if (interview.status === 'SCHEDULED') {
-    return '#3b82f6'; // blue
+    // 判断面试时间是否已过
+    const now = new Date();
+    const endTime = new Date(interview.end_time);
+    if (endTime < now) {
+      return '#f97316'; // orange - 已过期但未更新状态
+    }
+    return '#3b82f6'; // blue - 待进行
   }
   // FINISHED - check application status
   if (interview.application?.current_status === 'REJECTED') {

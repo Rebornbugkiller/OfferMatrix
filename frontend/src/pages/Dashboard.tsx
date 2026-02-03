@@ -118,7 +118,9 @@ export default function Dashboard() {
     setInterviewModalOpen(true);
   };
 
-  const inProcessApps = applications.filter((app) => app.current_status === 'IN_PROCESS');
+  const quickAddApps = applications.filter(
+    (app) => app.current_status === 'IN_PROCESS' || app.current_status === 'OFFER' || app.current_status === 'REJECTED'
+  );
 
   return (
     <div className="space-y-6">
@@ -156,15 +158,24 @@ export default function Dashboard() {
             新增申请
           </Button>
         </div>
-        {inProcessApps.length > 0 ? (
+        {quickAddApps.length > 0 ? (
           <div className="flex flex-wrap gap-2">
-            {inProcessApps.map((app) => (
+            {quickAddApps.map((app) => (
               <Button
                 key={app.id}
                 onClick={() => handleAddInterview(app)}
-                className="hover:border-indigo-400 hover:text-indigo-600"
+                style={
+                  app.current_status === 'OFFER'
+                    ? { borderColor: '#22c55e', color: '#16a34a', backgroundColor: '#f0fdf4' }
+                    : app.current_status === 'REJECTED'
+                    ? { borderColor: '#ef4444', color: '#dc2626', backgroundColor: '#fef2f2' }
+                    : undefined
+                }
+                className={app.current_status === 'IN_PROCESS' ? 'hover:border-indigo-400 hover:text-indigo-600' : ''}
               >
                 {app.company_name}
+                {app.current_status === 'OFFER' && ' ✓'}
+                {app.current_status === 'REJECTED' && ' ✗'}
               </Button>
             ))}
           </div>
