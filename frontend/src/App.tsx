@@ -1,10 +1,11 @@
 import { BrowserRouter, Routes, Route, Link, useLocation, Navigate } from 'react-router-dom';
 import { ConfigProvider, Layout, Menu, Dropdown, Spin } from 'antd';
-import { CalendarOutlined, AppstoreOutlined, UserOutlined, LogoutOutlined } from '@ant-design/icons';
+import { CalendarOutlined, AppstoreOutlined, UserOutlined, LogoutOutlined, BarChartOutlined } from '@ant-design/icons';
 import zhCN from 'antd/locale/zh_CN';
 import Dashboard from './pages/Dashboard';
 import Applications from './pages/Applications';
 import ApplicationDetail from './pages/ApplicationDetail';
+import Statistics from './pages/Statistics';
 import Login from './pages/Login';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import './App.css';
@@ -44,10 +45,17 @@ function AppLayout() {
       icon: <AppstoreOutlined />,
       label: <Link to="/applications">公司申请</Link>,
     },
+    {
+      key: '/statistics',
+      icon: <BarChartOutlined />,
+      label: <Link to="/statistics">数据统计</Link>,
+    },
   ];
 
   const selectedKey = location.pathname.startsWith('/applications')
     ? '/applications'
+    : location.pathname.startsWith('/statistics')
+    ? '/statistics'
     : '/';
 
   const userMenuItems = [
@@ -92,6 +100,7 @@ function AppLayout() {
             <Route path="/" element={<Dashboard />} />
             <Route path="/applications" element={<Applications />} />
             <Route path="/applications/:id" element={<ApplicationDetail />} />
+            <Route path="/statistics" element={<Statistics />} />
           </Routes>
         </div>
       </Content>
