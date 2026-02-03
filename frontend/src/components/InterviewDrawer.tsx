@@ -14,7 +14,7 @@ import {
 import { DeleteOutlined, LinkOutlined } from '@ant-design/icons';
 import dayjs from 'dayjs';
 import type { Interview, UpdateInterviewRequest } from '../types';
-import { interviewApi } from '../services/api';
+import { interviewApi, applicationApi } from '../services/api';
 
 interface InterviewDrawerProps {
   interview: Interview | null;
@@ -39,6 +39,7 @@ export default function InterviewDrawer({
   useEffect(() => {
     if (interview) {
       form.setFieldsValue({
+        job_title: interview.application?.job_title,
         round_name: interview.round_name,
         start_time: dayjs(interview.start_time),
         end_time: dayjs(interview.end_time),
@@ -54,6 +55,14 @@ export default function InterviewDrawer({
     try {
       setLoading(true);
       const values = await form.validateFields();
+
+      // 更新职位（如果有变化）
+      if (values.job_title !== interview.application?.job_title && interview.application_id) {
+        await applicationApi.update(interview.application_id, {
+          job_title: values.job_title,
+        });
+      }
+
       const data: UpdateInterviewRequest = {
         round_name: values.round_name,
         start_time: values.start_time.toISOString(),
@@ -103,12 +112,25 @@ export default function InterviewDrawer({
       label: '面试详情',
       children: (
         <Form form={form} layout="vertical">
+          <Form.Item name="job_title" label="职位">
+            <Input placeholder="例如：前端开发工程师" />
+          </Form.Item>
+
           <Form.Item
             name="round_name"
             label="面试轮次"
-            rules={[{ required: true, message: '请输入面试轮次' }]}
+            rules={[{ required: true, message: '请选择面试轮次' }]}
           >
-            <Input placeholder="例如：技术一面、HR面" />
+            <Select placeholder="请选择面试轮次">
+              <Select.Option value="AI面">AI面</Select.Option>
+              <Select.Option value="HR面">HR面</Select.Option>
+              <Select.Option value="业务一面">业务一面</Select.Option>
+              <Select.Option value="业务二面">业务二面</Select.Option>
+              <Select.Option value="业务三面">业务三面</Select.Option>
+              <Select.Option value="技术一面">技术一面</Select.Option>
+              <Select.Option value="技术二面">技术二面</Select.Option>
+              <Select.Option value="终面">终面</Select.Option>
+            </Select>
           </Form.Item>
 
           <Form.Item

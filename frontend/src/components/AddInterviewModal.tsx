@@ -67,9 +67,18 @@ export default function AddInterviewModal({
         <Form.Item
           name="round_name"
           label="面试轮次"
-          rules={[{ required: true, message: '请输入面试轮次' }]}
+          rules={[{ required: true, message: '请选择面试轮次' }]}
         >
-          <Input placeholder="例如：技术一面、HR面" />
+          <Select placeholder="请选择面试轮次">
+            <Select.Option value="AI面">AI面</Select.Option>
+            <Select.Option value="HR面">HR面</Select.Option>
+            <Select.Option value="业务一面">业务一面</Select.Option>
+            <Select.Option value="业务二面">业务二面</Select.Option>
+            <Select.Option value="业务三面">业务三面</Select.Option>
+            <Select.Option value="技术一面">技术一面</Select.Option>
+            <Select.Option value="技术二面">技术二面</Select.Option>
+            <Select.Option value="终面">终面</Select.Option>
+          </Select>
         </Form.Item>
 
         <Form.Item

@@ -53,7 +53,15 @@ func (r *InterviewRepository) FindByApplicationID(appID int64) ([]model.Intervie
 }
 
 func (r *InterviewRepository) Update(interview *model.Interview) error {
-	return r.db.Save(interview).Error
+	return r.db.Model(interview).Updates(map[string]interface{}{
+		"application_id": interview.ApplicationID,
+		"round_name":     interview.RoundName,
+		"start_time":     interview.StartTime,
+		"end_time":       interview.EndTime,
+		"status":         interview.Status,
+		"meeting_link":   interview.MeetingLink,
+		"review_content": interview.ReviewContent,
+	}).Error
 }
 
 func (r *InterviewRepository) UpdateReview(id int64, reviewContent string) error {

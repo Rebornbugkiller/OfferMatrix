@@ -148,6 +148,18 @@ body {
   overflow: visible !important;
 }
 
+.fc-timegrid-event-harness {
+  overflow: visible !important;
+}
+
+.fc-timegrid-col-events {
+  overflow: visible !important;
+}
+
+.fc-event-main-frame {
+  overflow: visible !important;
+}
+
 /* 当前时间指示线样式 */
 .fc .fc-timegrid-now-indicator-line {
   border-color: #ef4444 !important;

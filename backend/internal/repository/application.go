@@ -36,7 +36,11 @@ func (r *ApplicationRepository) FindByID(id int64) (*model.Application, error) {
 }
 
 func (r *ApplicationRepository) Update(app *model.Application) error {
-	return r.db.Save(app).Error
+	return r.db.Model(app).Updates(map[string]interface{}{
+		"company_name":   app.CompanyName,
+		"job_title":      app.JobTitle,
+		"current_status": app.CurrentStatus,
+	}).Error
 }
 
 func (r *ApplicationRepository) Delete(id int64) error {

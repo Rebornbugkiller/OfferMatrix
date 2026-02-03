@@ -39,7 +39,7 @@ export default function WeeklyCalendar({
 
   const events = interviews.map((interview) => ({
     id: String(interview.id),
-    title: `${interview.application?.company_name || 'Unknown'} - ${interview.application?.job_title || ''} - ${interview.round_name}`,
+    title: `${interview.application?.company_name || 'Unknown'} - ${interview.round_name}`,
     start: interview.start_time,
     end: interview.end_time,
     backgroundColor: getEventColor(interview),
@@ -85,8 +85,13 @@ export default function WeeklyCalendar({
         eventClick={handleEventClick}
         eventDrop={handleEventDrop}
         eventResize={handleEventDrop}
+        eventDidMount={(info) => {
+          const interview = info.event.extendedProps.interview as Interview;
+          const tooltipText = `${interview.application?.company_name}\n${interview.application?.job_title}\n${interview.round_name}`;
+          info.el.setAttribute('title', tooltipText);
+        }}
         slotMinTime="08:00:00"
-        slotMaxTime="20:00:00"
+        slotMaxTime="22:00:00"
         slotLabelFormat={{
           hour: '2-digit',
           minute: '2-digit',
