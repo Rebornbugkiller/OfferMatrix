@@ -20,7 +20,7 @@ interface InterviewDrawerProps {
   interview: Interview | null;
   open: boolean;
   onClose: () => void;
-  onUpdate: () => void;
+  onUpdate: (updatedInterview?: Partial<Interview>) => void;
   onDelete: () => void;
 }
 
@@ -34,7 +34,6 @@ export default function InterviewDrawer({
   const [form] = Form.useForm();
   const [reviewContent, setReviewContent] = useState('');
   const [activeTab, setActiveTab] = useState('details');
-  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (interview) {
@@ -53,8 +52,10 @@ export default function InterviewDrawer({
   const handleSaveDetails = async () => {
     if (!interview) return;
     try {
-      setLoading(true);
       const values = await form.validateFields();
+
+      // 立即关闭 Drawer 给用户"已完成"的感觉
+      onClose();
 
       // 更新职位（如果有变化）
       if (values.job_title !== interview.application?.job_title && interview.application_id) {
@@ -72,25 +73,23 @@ export default function InterviewDrawer({
       };
       await interviewApi.update(interview.id, data);
       message.success('保存成功');
-      onUpdate();
+      onUpdate(data);
     } catch (error) {
       message.error('保存失败');
-    } finally {
-      setLoading(false);
     }
   };
 
   const handleSaveReview = async () => {
     if (!interview) return;
     try {
-      setLoading(true);
+      // 立即关闭 Drawer
+      onClose();
+
       await interviewApi.updateReview(interview.id, reviewContent);
       message.success('复盘笔记已保存');
-      onUpdate();
+      onUpdate({ review_content: reviewContent });
     } catch (error) {
       message.error('保存失败');
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -165,7 +164,7 @@ export default function InterviewDrawer({
           </Form.Item>
 
           <Form.Item>
-            <Button type="primary" onClick={handleSaveDetails} loading={loading}>
+            <Button type="primary" onClick={handleSaveDetails}>
               保存
             </Button>
           </Form.Item>
@@ -189,7 +188,7 @@ export default function InterviewDrawer({
             />
           </div>
 
-          <Button type="primary" onClick={handleSaveReview} loading={loading}>
+          <Button type="primary" onClick={handleSaveReview}>
             保存笔记
           </Button>
         </div>

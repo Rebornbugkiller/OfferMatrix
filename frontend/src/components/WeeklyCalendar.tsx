@@ -1,4 +1,4 @@
-import { useCallback, useRef } from 'react';
+import { useCallback, useRef, useMemo } from 'react';
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
@@ -43,15 +43,18 @@ export default function WeeklyCalendar({
 }: WeeklyCalendarProps) {
   const calendarRef = useRef<HTMLDivElement>(null);
 
-  const events = interviews.map((interview) => ({
-    id: String(interview.id),
-    title: `${interview.application?.company_name || 'Unknown'} - ${interview.round_name}`,
-    start: interview.start_time,
-    end: interview.end_time,
-    backgroundColor: getEventColor(interview),
-    borderColor: getEventColor(interview),
-    extendedProps: { interview },
-  }));
+  const events = useMemo(() =>
+    interviews.map((interview) => ({
+      id: String(interview.id),
+      title: `${interview.application?.company_name || 'Unknown'} - ${interview.round_name}`,
+      start: interview.start_time,
+      end: interview.end_time,
+      backgroundColor: getEventColor(interview),
+      borderColor: getEventColor(interview),
+      extendedProps: { interview },
+    })),
+    [interviews]
+  );
 
   const handleEventClick = useCallback(
     (info: EventClickArg) => {

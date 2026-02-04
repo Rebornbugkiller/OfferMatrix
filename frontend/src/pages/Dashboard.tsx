@@ -100,16 +100,38 @@ export default function Dashboard() {
   };
 
   const handleEventDrop = async (id: number, start: Date, end: Date) => {
+    // 保存原始状态用于回滚
+    let oldStartTime: string | undefined;
+    let oldEndTime: string | undefined;
+    setInterviews(prev => {
+      const interview = prev.find(i => i.id === id);
+      oldStartTime = interview?.start_time;
+      oldEndTime = interview?.end_time;
+      return prev.map(i =>
+        i.id === id
+          ? { ...i, start_time: start.toISOString(), end_time: end.toISOString() }
+          : i
+      );
+    });
+
     try {
       await interviewApi.update(id, {
         start_time: start.toISOString(),
         end_time: end.toISOString(),
       });
       message.success('时间已更新');
-      fetchInterviews();
     } catch (error) {
-      message.error('更新失败');
-      fetchInterviews();
+      // 回滚到原状态
+      if (oldStartTime && oldEndTime) {
+        setInterviews(prev =>
+          prev.map(i =>
+            i.id === id
+              ? { ...i, start_time: oldStartTime!, end_time: oldEndTime! }
+              : i
+          )
+        );
+      }
+      message.error('更新失败，已恢复');
     }
   };
 
@@ -118,8 +140,11 @@ export default function Dashboard() {
     setInterviewModalOpen(true);
   };
 
-  const quickAddApps = applications.filter(
-    (app) => app.current_status === 'IN_PROCESS' || app.current_status === 'OFFER' || app.current_status === 'REJECTED'
+  const quickAddApps = useMemo(() =>
+    applications.filter(
+      (app) => app.current_status === 'IN_PROCESS' || app.current_status === 'OFFER' || app.current_status === 'REJECTED'
+    ),
+    [applications]
   );
 
   return (

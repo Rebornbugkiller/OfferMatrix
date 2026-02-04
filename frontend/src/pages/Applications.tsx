@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   Table,
@@ -48,27 +48,60 @@ export default function Applications() {
     fetchApplications(keyword);
   };
 
-  const handleStatusChange = async (id: number, status: string) => {
+  const handleStatusChange = useCallback(async (id: number, status: string) => {
+    // 保存当前状态用于回滚
+    let oldStatus: string | undefined;
+    setApplications(prev => {
+      const app = prev.find(a => a.id === id);
+      oldStatus = app?.current_status;
+      return prev.map(a =>
+        a.id === id ? { ...a, current_status: status } : a
+      );
+    });
+
     try {
       await applicationApi.update(id, { current_status: status });
       message.success('状态已更新');
-      fetchApplications(keyword);
     } catch (error) {
-      message.error('更新失败');
+      // 回滚到原状态
+      if (oldStatus !== undefined) {
+        setApplications(prev =>
+          prev.map(a =>
+            a.id === id ? { ...a, current_status: oldStatus! } : a
+          )
+        );
+      }
+      message.error('更新失败，已恢复');
     }
-  };
+  }, []);
 
-  const handleDelete = async (id: number) => {
+  const handleDelete = useCallback(async (id: number) => {
+    // 保存被删除的项用于回滚
+    let deletedApp: Application | undefined;
+    let deletedIndex: number = -1;
+    setApplications(prev => {
+      deletedIndex = prev.findIndex(a => a.id === id);
+      deletedApp = prev[deletedIndex];
+      return prev.filter(a => a.id !== id);
+    });
+
     try {
       await applicationApi.delete(id);
       message.success('已删除');
-      fetchApplications(keyword);
     } catch (error) {
-      message.error('删除失败');
+      // 回滚：恢复被删除的项
+      if (deletedApp && deletedIndex >= 0) {
+        setApplications(prev => {
+          const newList = [...prev];
+          newList.splice(deletedIndex, 0, deletedApp!);
+          return newList;
+        });
+      }
+      message.error('删除失败，已恢复');
     }
-  };
+  }, []);
 
-  const columns: ColumnsType<Application> = [
+  const columns = useMemo<ColumnsType<Application>>(() => [
     {
       title: '公司名称',
       dataIndex: 'company_name',
@@ -141,7 +174,7 @@ export default function Applications() {
         </Space>
       ),
     },
-  ];
+  ], [navigate, handleStatusChange, handleDelete]);
 
   return (
     <div className="space-y-4">
