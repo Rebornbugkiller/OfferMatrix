@@ -1,14 +1,15 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Modal, Form, Input, Select, DatePicker, message } from 'antd';
 import dayjs from 'dayjs';
 import type { Application, CreateInterviewRequest } from '../types';
-import { interviewApi } from '../services/api';
+import { interviewApi, applicationApi } from '../services/api';
 
 interface AddInterviewModalProps {
   application: Application | null;
   open: boolean;
   onClose: () => void;
   onSuccess: () => void;
+  onApplicationUpdate?: () => void;
 }
 
 export default function AddInterviewModal({
@@ -16,30 +17,54 @@ export default function AddInterviewModal({
   open,
   onClose,
   onSuccess,
+  onApplicationUpdate,
 }: AddInterviewModalProps) {
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (application && open) {
+      form.setFieldsValue({
+        application_status: application.current_status,
+      });
+    }
+  }, [application, open, form]);
 
   const handleSubmit = async () => {
     if (!application) return;
     try {
       setLoading(true);
-      const values = await form.validateFields();
-      const data: CreateInterviewRequest = {
-        application_id: application.id,
-        round_name: values.round_name,
-        start_time: values.start_time.toISOString(),
-        end_time: values.end_time.toISOString(),
-        status: values.status || 'SCHEDULED',
-        meeting_link: values.meeting_link,
-      };
-      await interviewApi.create(data);
-      message.success('面试已添加');
+      const values = await form.getFieldsValue();
+
+      // 更新公司状态（如果有变化）
+      if (values.application_status !== application.current_status) {
+        await applicationApi.update(application.id, {
+          current_status: values.application_status,
+        });
+        onApplicationUpdate?.();
+      }
+
+      // 如果选择了面试轮次，才创建面试
+      if (values.round_name) {
+        const data: CreateInterviewRequest = {
+          application_id: application.id,
+          round_name: values.round_name,
+          start_time: values.start_time.toISOString(),
+          end_time: values.end_time.toISOString(),
+          status: values.status || 'SCHEDULED',
+          meeting_link: values.meeting_link,
+        };
+        await interviewApi.create(data);
+        message.success('面试已添加');
+        onSuccess();
+      } else {
+        message.success('已更新');
+      }
+
       form.resetFields();
-      onSuccess();
       onClose();
     } catch (error) {
-      message.error('添加失败');
+      message.error('操作失败');
     } finally {
       setLoading(false);
     }
@@ -47,12 +72,12 @@ export default function AddInterviewModal({
 
   return (
     <Modal
-      title={`添加面试 - ${application?.company_name}`}
+      title={`${application?.company_name}`}
       open={open}
       onOk={handleSubmit}
       onCancel={onClose}
       confirmLoading={loading}
-      okText="添加"
+      okText="保存"
       cancelText="取消"
     >
       <Form
@@ -64,12 +89,19 @@ export default function AddInterviewModal({
           end_time: dayjs().hour(11).minute(0),
         }}
       >
+        <Form.Item name="application_status" label="公司状态">
+          <Select>
+            <Select.Option value="IN_PROCESS">进行中</Select.Option>
+            <Select.Option value="OFFER">已拿 Offer ✓</Select.Option>
+            <Select.Option value="REJECTED">已拒绝 ✗</Select.Option>
+          </Select>
+        </Form.Item>
+
         <Form.Item
           name="round_name"
           label="面试轮次"
-          rules={[{ required: true, message: '请选择面试轮次' }]}
         >
-          <Select placeholder="请选择面试轮次">
+          <Select placeholder="不选则只更新公司状态" allowClear>
             <Select.Option value="AI面">AI面</Select.Option>
             <Select.Option value="HR面">HR面</Select.Option>
             <Select.Option value="业务一面">业务一面</Select.Option>

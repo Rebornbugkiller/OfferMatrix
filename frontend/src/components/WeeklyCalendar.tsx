@@ -81,8 +81,9 @@ export default function WeeklyCalendar({
       <FullCalendar
         plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
         initialView="timeGridWeek"
+        weekends={false}
         headerToolbar={{
-          left: 'prev,next',
+          left: 'today prev,next',
           center: 'title',
           right: 'dayGridMonth,timeGridWeek,timeGridDay',
         }}
@@ -112,6 +113,7 @@ export default function WeeklyCalendar({
         height="auto"
         locale="zh-cn"
         buttonText={{
+          today: '今天',
           month: '月',
           week: '周',
           day: '日',

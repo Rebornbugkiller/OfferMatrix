@@ -52,7 +52,7 @@ export interface CreateApplicationRequest {
 export interface UpdateApplicationRequest {
   company_name?: string;
   job_title?: string;
-  current_status?: string;
+  current_status?: 'IN_PROCESS' | 'OFFER' | 'REJECTED';
 }
 
 export interface CreateInterviewRequest {
@@ -69,7 +69,7 @@ export interface UpdateInterviewRequest {
   round_name?: string;
   start_time?: string;
   end_time?: string;
-  status?: string;
+  status?: 'SCHEDULED' | 'FINISHED' | 'CANCELLED';
   meeting_link?: string;
   review_content?: string;
 }

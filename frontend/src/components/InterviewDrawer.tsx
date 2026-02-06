@@ -39,6 +39,7 @@ export default function InterviewDrawer({
     if (interview) {
       form.setFieldsValue({
         job_title: interview.application?.job_title,
+        application_status: interview.application?.current_status,
         round_name: interview.round_name,
         start_time: dayjs(interview.start_time),
         end_time: dayjs(interview.end_time),
@@ -64,16 +65,23 @@ export default function InterviewDrawer({
         });
       }
 
+      // 更新公司状态（如果有变化）
+      if (values.application_status !== interview.application?.current_status && interview.application_id) {
+        await applicationApi.update(interview.application_id, {
+          current_status: values.application_status,
+        });
+      }
+
       const data: UpdateInterviewRequest = {
         round_name: values.round_name,
         start_time: values.start_time.toISOString(),
         end_time: values.end_time.toISOString(),
-        status: values.status,
+        status: values.status as Interview['status'],
         meeting_link: values.meeting_link,
       };
       await interviewApi.update(interview.id, data);
       message.success('保存成功');
-      onUpdate(data);
+      onUpdate(data as Partial<Interview>);
     } catch (error) {
       message.error('保存失败');
     }
@@ -113,6 +121,14 @@ export default function InterviewDrawer({
         <Form form={form} layout="vertical">
           <Form.Item name="job_title" label="职位">
             <Input placeholder="例如：前端开发工程师" />
+          </Form.Item>
+
+          <Form.Item name="application_status" label="公司状态">
+            <Select>
+              <Select.Option value="IN_PROCESS">进行中</Select.Option>
+              <Select.Option value="OFFER">已拿 Offer ✓</Select.Option>
+              <Select.Option value="REJECTED">已拒绝 ✗</Select.Option>
+            </Select>
           </Form.Item>
 
           <Form.Item

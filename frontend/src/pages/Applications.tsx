@@ -48,9 +48,9 @@ export default function Applications() {
     fetchApplications(keyword);
   };
 
-  const handleStatusChange = useCallback(async (id: number, status: string) => {
+  const handleStatusChange = useCallback(async (id: number, status: Application['current_status']) => {
     // 保存当前状态用于回滚
-    let oldStatus: string | undefined;
+    let oldStatus: Application['current_status'] | undefined;
     setApplications(prev => {
       const app = prev.find(a => a.id === id);
       oldStatus = app?.current_status;

@@ -140,12 +140,18 @@ export default function Dashboard() {
     setInterviewModalOpen(true);
   };
 
-  const quickAddApps = useMemo(() =>
-    applications.filter(
-      (app) => app.current_status === 'IN_PROCESS' || app.current_status === 'OFFER' || app.current_status === 'REJECTED'
-    ),
-    [applications]
-  );
+  const quickAddApps = useMemo(() => {
+    const statusOrder: Record<string, number> = {
+      'OFFER': 0,
+      'IN_PROCESS': 1,
+      'REJECTED': 2,
+    };
+    return applications
+      .filter(
+        (app) => app.current_status === 'IN_PROCESS' || app.current_status === 'OFFER' || app.current_status === 'REJECTED'
+      )
+      .sort((a, b) => (statusOrder[a.current_status] ?? 1) - (statusOrder[b.current_status] ?? 1));
+  }, [applications]);
 
   return (
     <div className="space-y-6">
@@ -224,6 +230,7 @@ export default function Dashboard() {
         onClose={() => setDrawerOpen(false)}
         onUpdate={() => {
           fetchInterviews();
+          fetchApplications();
         }}
         onDelete={() => {
           fetchInterviews();
@@ -244,6 +251,9 @@ export default function Dashboard() {
         onClose={() => setInterviewModalOpen(false)}
         onSuccess={() => {
           fetchInterviews();
+        }}
+        onApplicationUpdate={() => {
+          fetchApplications();
         }}
       />
     </div>
