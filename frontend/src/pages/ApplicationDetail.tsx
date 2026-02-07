@@ -94,7 +94,7 @@ export default function ApplicationDetail() {
         >
           返回
         </Button>
-        <h1 className="text-2xl font-bold text-gray-800">
+        <h1 className="text-2xl font-bold" style={{ color: '#1e1b4b' }}>
           {application.company_name}
         </h1>
         <Tag color={appStatusColors[application.current_status]}>

@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from 'react';
-import { Card, Statistic, Row, Col, Segmented, Empty, Spin } from 'antd';
+import { Card, Row, Col, Segmented, Empty, Spin } from 'antd';
 import {
   TrophyOutlined,
   CloseCircleOutlined,
@@ -11,8 +11,6 @@ import {
   TeamOutlined,
 } from '@ant-design/icons';
 import {
-  LineChart,
-  Line,
   XAxis,
   YAxis,
   CartesianGrid,
@@ -24,6 +22,8 @@ import {
   BarChart,
   Bar,
   Legend,
+  AreaChart,
+  Area,
 } from 'recharts';
 import type { Interview, Application } from '../types';
 import { interviewApi, applicationApi } from '../services/api';
@@ -162,88 +162,36 @@ export default function Statistics() {
   return (
     <div className="space-y-6">
       {/* 数字卡片区 */}
-      <Row gutter={[16, 16]}>
-        <Col xs={12} sm={8} md={6}>
-          <Card>
-            <Statistic
-              title="总面试场次"
-              value={stats.totalInterviews}
-              prefix={<CalendarOutlined />}
-            />
-          </Card>
-        </Col>
-        <Col xs={12} sm={8} md={6}>
-          <Card>
-            <Statistic
-              title="申请公司数"
-              value={stats.totalCompanies}
-              prefix={<TeamOutlined />}
-            />
-          </Card>
-        </Col>
-        <Col xs={12} sm={8} md={6}>
-          <Card>
-            <Statistic
-              title="Offer"
-              value={stats.offers}
-              prefix={<TrophyOutlined />}
-              valueStyle={{ color: '#22c55e' }}
-            />
-          </Card>
-        </Col>
-        <Col xs={12} sm={8} md={6}>
-          <Card>
-            <Statistic
-              title="已挂"
-              value={stats.rejected}
-              prefix={<CloseCircleOutlined />}
-              valueStyle={{ color: '#ef4444' }}
-            />
-          </Card>
-        </Col>
-        <Col xs={12} sm={8} md={6}>
-          <Card>
-            <Statistic
-              title="进行中"
-              value={stats.inProcess}
-              prefix={<RocketOutlined />}
-              valueStyle={{ color: '#3b82f6' }}
-            />
-          </Card>
-        </Col>
-        <Col xs={12} sm={8} md={6}>
-          <Card>
-            <Statistic
-              title="Offer 率"
-              value={stats.offerRate}
-              suffix="%"
-              prefix={<PercentageOutlined />}
-              valueStyle={{ color: '#22c55e' }}
-            />
-          </Card>
-        </Col>
-        <Col xs={12} sm={8} md={6}>
-          <Card>
-            <Statistic
-              title="复盘完成率"
-              value={stats.reviewRate}
-              suffix="%"
-              prefix={<CheckCircleOutlined />}
-            />
-          </Card>
-        </Col>
-        <Col xs={12} sm={8} md={6}>
-          <Card>
-            <Statistic
-              title="单日最多面试"
-              value={stats.maxDayCount}
-              suffix="场"
-              prefix={<FireOutlined />}
-              valueStyle={{ color: '#f97316' }}
-            />
-            <div className="text-xs text-gray-400 mt-1">{stats.maxDayDate}</div>
-          </Card>
-        </Col>
+      <Row gutter={[16, 16]} className="stagger-children">
+        {[
+          { icon: <CalendarOutlined />, title: '总面试场次', value: stats.totalInterviews, gradient: 'linear-gradient(135deg, #ec4899 0%, #a855f7 100%)', glow: 'rgba(236, 72, 153, 0.25)' },
+          { icon: <TeamOutlined />, title: '申请公司数', value: stats.totalCompanies, gradient: 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)', glow: 'rgba(99, 102, 241, 0.25)' },
+          { icon: <TrophyOutlined />, title: 'Offer', value: stats.offers, gradient: 'linear-gradient(135deg, #22c55e 0%, #10b981 100%)', glow: 'rgba(34, 197, 94, 0.25)' },
+          { icon: <CloseCircleOutlined />, title: '已挂', value: stats.rejected, gradient: 'linear-gradient(135deg, #ef4444 0%, #f97316 100%)', glow: 'rgba(239, 68, 68, 0.25)' },
+          { icon: <RocketOutlined />, title: '进行中', value: stats.inProcess, gradient: 'linear-gradient(135deg, #3b82f6 0%, #0ea5e9 100%)', glow: 'rgba(59, 130, 246, 0.25)' },
+          { icon: <PercentageOutlined />, title: 'Offer 率', value: stats.offerRate, suffix: '%', gradient: 'linear-gradient(135deg, #10b981 0%, #059669 100%)', glow: 'rgba(16, 185, 129, 0.25)' },
+          { icon: <CheckCircleOutlined />, title: '复盘完成率', value: stats.reviewRate, suffix: '%', gradient: 'linear-gradient(135deg, #8b5cf6 0%, #a855f7 100%)', glow: 'rgba(139, 92, 246, 0.25)' },
+          { icon: <FireOutlined />, title: '单日最多面试', value: stats.maxDayCount, suffix: '场', gradient: 'linear-gradient(135deg, #f97316 0%, #ef4444 100%)', glow: 'rgba(249, 115, 22, 0.25)', extra: stats.maxDayDate },
+        ].map((item, index) => (
+          <Col xs={12} sm={8} md={6} key={index}>
+            <div
+              className="rounded-2xl p-5 text-white relative overflow-hidden"
+              style={{
+                background: item.gradient,
+                boxShadow: `0 8px 32px ${item.glow}`,
+                transition: 'transform 0.3s ease, box-shadow 0.3s ease',
+              }}
+              onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-4px) scale(1.02)'; }}
+              onMouseLeave={(e) => { e.currentTarget.style.transform = 'translateY(0) scale(1)'; }}
+            >
+              <div className="absolute -top-4 -right-4 w-20 h-20 rounded-full" style={{ background: 'rgba(255,255,255,0.1)' }} />
+              <div className="text-2xl mb-2" style={{ opacity: 0.8 }}>{item.icon}</div>
+              <div className="text-3xl font-bold">{item.value}{item.suffix}</div>
+              <div className="text-sm opacity-80">{item.title}</div>
+              {item.extra && <div className="text-xs opacity-60 mt-1">{item.extra}</div>}
+            </div>
+          </Col>
+        ))}
       </Row>
 
       {/* 图表区 */}
@@ -266,20 +214,36 @@ export default function Statistics() {
           >
             {trendData.length > 0 ? (
               <ResponsiveContainer width="100%" height={300}>
-                <LineChart data={trendData}>
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="name" />
-                  <YAxis allowDecimals={false} />
-                  <Tooltip />
-                  <Line
+                <AreaChart data={trendData}>
+                  <defs>
+                    <linearGradient id="areaGradient" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stopColor="#ec4899" stopOpacity={0.3} />
+                      <stop offset="100%" stopColor="#ec4899" stopOpacity={0} />
+                    </linearGradient>
+                  </defs>
+                  <CartesianGrid strokeDasharray="3 3" stroke="rgba(236, 72, 153, 0.08)" />
+                  <XAxis dataKey="name" stroke="#9ca3af" fontSize={12} />
+                  <YAxis allowDecimals={false} stroke="#9ca3af" fontSize={12} />
+                  <Tooltip
+                    contentStyle={{
+                      background: 'rgba(255,255,255,0.9)',
+                      backdropFilter: 'blur(8px)',
+                      border: '1px solid rgba(236, 72, 153, 0.15)',
+                      borderRadius: 12,
+                      boxShadow: '0 8px 32px rgba(0,0,0,0.08)',
+                    }}
+                  />
+                  <Area
                     type="monotone"
                     dataKey="count"
                     name="面试数"
-                    stroke="#4f46e5"
-                    strokeWidth={2}
-                    dot={{ fill: '#4f46e5' }}
+                    stroke="#ec4899"
+                    strokeWidth={3}
+                    fill="url(#areaGradient)"
+                    dot={{ fill: '#ec4899', strokeWidth: 2, stroke: '#fff', r: 5 }}
+                    activeDot={{ r: 7, fill: '#ec4899', stroke: '#fff', strokeWidth: 3 }}
                   />
-                </LineChart>
+                </AreaChart>
               </ResponsiveContainer>
             ) : (
               <Empty description="暂无数据" />
@@ -297,17 +261,26 @@ export default function Statistics() {
                     data={statusData}
                     cx="50%"
                     cy="50%"
-                    innerRadius={60}
-                    outerRadius={100}
-                    paddingAngle={5}
+                    innerRadius={65}
+                    outerRadius={105}
+                    paddingAngle={4}
                     dataKey="value"
+                    cornerRadius={6}
                     label={({ name, percent }) => `${name} ${((percent || 0) * 100).toFixed(0)}%`}
                   >
                     {statusData.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={entry.color} />
+                      <Cell key={`cell-${index}`} fill={entry.color} stroke="rgba(255,255,255,0.5)" strokeWidth={2} />
                     ))}
                   </Pie>
-                  <Tooltip />
+                  <Tooltip
+                    contentStyle={{
+                      background: 'rgba(255,255,255,0.9)',
+                      backdropFilter: 'blur(8px)',
+                      border: '1px solid rgba(236, 72, 153, 0.15)',
+                      borderRadius: 12,
+                      boxShadow: '0 8px 32px rgba(0,0,0,0.08)',
+                    }}
+                  />
                 </PieChart>
               </ResponsiveContainer>
             ) : (
@@ -322,12 +295,26 @@ export default function Statistics() {
             {roundData.length > 0 ? (
               <ResponsiveContainer width="100%" height={300}>
                 <BarChart data={roundData} layout="vertical">
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis type="number" allowDecimals={false} />
-                  <YAxis type="category" dataKey="name" width={80} />
-                  <Tooltip />
+                  <defs>
+                    <linearGradient id="barGradient" x1="0" y1="0" x2="1" y2="0">
+                      <stop offset="0%" stopColor="#ec4899" />
+                      <stop offset="100%" stopColor="#a855f7" />
+                    </linearGradient>
+                  </defs>
+                  <CartesianGrid strokeDasharray="3 3" stroke="rgba(236, 72, 153, 0.08)" />
+                  <XAxis type="number" allowDecimals={false} stroke="#9ca3af" fontSize={12} />
+                  <YAxis type="category" dataKey="name" width={80} stroke="#9ca3af" fontSize={12} />
+                  <Tooltip
+                    contentStyle={{
+                      background: 'rgba(255,255,255,0.9)',
+                      backdropFilter: 'blur(8px)',
+                      border: '1px solid rgba(236, 72, 153, 0.15)',
+                      borderRadius: 12,
+                      boxShadow: '0 8px 32px rgba(0,0,0,0.08)',
+                    }}
+                  />
                   <Legend />
-                  <Bar dataKey="count" name="面试数" fill="#4f46e5" radius={[0, 4, 4, 0]} />
+                  <Bar dataKey="count" name="面试数" fill="url(#barGradient)" radius={[0, 8, 8, 0]} />
                 </BarChart>
               </ResponsiveContainer>
             ) : (

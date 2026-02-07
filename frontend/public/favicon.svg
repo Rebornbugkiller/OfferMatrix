@@ -1,1 +1,25 @@
-<svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg"><rect width="64" height="64" rx="12" fill="#09090b" /><path d="M16 20L24 20" stroke="#00ff41" stroke-width="4" stroke-linecap="round" /><path d="M16 32L30 32" stroke="#00ff41" stroke-width="4" stroke-linecap="round" /><path d="M16 44L20 44" stroke="#00ff41" stroke-width="4" stroke-linecap="round" /><path d="M40 18L52 30L36 50" stroke="#00ff41" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" /><circle cx="50" cy="14" r="2" fill="#00ff41"><animate attributeName="opacity" values="1;0;1" dur="2s" repeatCount="indefinite" /></circle></svg>
+<svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#ec4899"/>
+      <stop offset="100%" stop-color="#a855f7"/>
+    </linearGradient>
+  </defs>
+  <!-- 圆角矩形背景 -->
+  <rect width="64" height="64" rx="14" fill="url(#bg)"/>
+  <!-- 五瓣樱花 -->
+  <g transform="translate(32,30)" fill="white" opacity="0.95">
+    <!-- 上 -->
+    <ellipse cx="0" cy="-12" rx="6.5" ry="10" transform="rotate(0)"/>
+    <!-- 右上 -->
+    <ellipse cx="0" cy="-12" rx="6.5" ry="10" transform="rotate(72)"/>
+    <!-- 右下 -->
+    <ellipse cx="0" cy="-12" rx="6.5" ry="10" transform="rotate(144)"/>
+    <!-- 左下 -->
+    <ellipse cx="0" cy="-12" rx="6.5" ry="10" transform="rotate(216)"/>
+    <!-- 左上 -->
+    <ellipse cx="0" cy="-12" rx="6.5" ry="10" transform="rotate(288)"/>
+  </g>
+  <!-- 花蕊中心的对勾 ✓ -->
+  <path d="M26 30 L30 35 L38 24" stroke="url(#bg)" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+</svg>

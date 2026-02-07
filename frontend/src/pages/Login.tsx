@@ -42,28 +42,61 @@ export default function Login() {
 
   return (
     <div
-      className="min-h-screen flex items-center justify-center"
+      className="min-h-screen flex items-center justify-center relative overflow-hidden"
       style={{
-        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+        background: 'linear-gradient(135deg, #1e1b4b 0%, #4c1d95 30%, #831843 60%, #1e1b4b 100%)',
       }}
     >
+      {/* 动画光球 */}
+      <div
+        style={{
+          position: 'absolute',
+          width: 500,
+          height: 500,
+          borderRadius: '50%',
+          background: 'radial-gradient(circle, rgba(236, 72, 153, 0.3) 0%, transparent 70%)',
+          top: '-10%',
+          right: '-10%',
+          animation: 'float-orb 15s ease-in-out infinite',
+          filter: 'blur(60px)',
+        }}
+      />
+      <div
+        style={{
+          position: 'absolute',
+          width: 400,
+          height: 400,
+          borderRadius: '50%',
+          background: 'radial-gradient(circle, rgba(99, 102, 241, 0.3) 0%, transparent 70%)',
+          bottom: '-10%',
+          left: '-5%',
+          animation: 'float-orb 18s ease-in-out infinite',
+          animationDelay: '-8s',
+          filter: 'blur(60px)',
+        }}
+      />
       <Card
         className="w-full max-w-md"
         style={{
-          borderRadius: 16,
-          boxShadow: '0 20px 60px rgba(0, 0, 0, 0.3)',
+          borderRadius: 20,
+          boxShadow: '0 25px 60px rgba(0, 0, 0, 0.4)',
+          background: 'rgba(255, 255, 255, 0.92)',
+          backdropFilter: 'blur(20px)',
+          border: '1px solid rgba(255, 255, 255, 0.3)',
+          position: 'relative',
+          zIndex: 1,
         }}
       >
         <div className="text-center mb-6">
           <h1
             className="text-3xl font-bold"
             style={{
-              background: 'linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%)',
+              background: 'linear-gradient(135deg, #ec4899 0%, #a855f7 100%)',
               WebkitBackgroundClip: 'text',
               WebkitTextFillColor: 'transparent',
             }}
           >
-            OfferMatrix
+            🌸 OfferMatrix
           </h1>
           <p className="text-gray-500 mt-2">面试管理助手</p>
         </div>

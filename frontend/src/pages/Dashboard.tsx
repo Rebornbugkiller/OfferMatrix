@@ -19,22 +19,44 @@ interface StatCardProps {
   icon: React.ReactNode;
   label: string;
   value: number;
-  color: string;
+  gradient: string;
+  glow: string;
 }
 
-function StatCard({ icon, label, value, color }: StatCardProps) {
+function StatCard({ icon, label, value, gradient, glow }: StatCardProps) {
   return (
-    <div className="bg-white rounded-xl p-5 border border-gray-100 shadow-sm hover:shadow-md transition-shadow">
-      <div className="flex items-center gap-4">
+    <div
+      className="rounded-2xl p-5 text-white relative overflow-hidden cursor-default"
+      style={{
+        background: gradient,
+        boxShadow: `0 8px 32px ${glow}`,
+        transition: 'transform 0.3s ease, box-shadow 0.3s ease',
+      }}
+      onMouseEnter={(e) => {
+        e.currentTarget.style.transform = 'translateY(-4px) scale(1.02)';
+      }}
+      onMouseLeave={(e) => {
+        e.currentTarget.style.transform = 'translateY(0) scale(1)';
+      }}
+    >
+      <div
+        className="absolute -top-4 -right-4 w-24 h-24 rounded-full"
+        style={{ background: 'rgba(255,255,255,0.1)' }}
+      />
+      <div
+        className="absolute -bottom-2 -right-2 w-16 h-16 rounded-full"
+        style={{ background: 'rgba(255,255,255,0.08)' }}
+      />
+      <div className="flex items-center gap-4 relative z-10">
         <div
           className="w-12 h-12 rounded-xl flex items-center justify-center text-xl"
-          style={{ background: `${color}15`, color }}
+          style={{ background: 'rgba(255,255,255,0.2)' }}
         >
           {icon}
         </div>
         <div>
-          <div className="text-2xl font-bold text-gray-800">{value}</div>
-          <div className="text-sm text-gray-500">{label}</div>
+          <div className="text-3xl font-bold">{value}</div>
+          <div className="text-sm opacity-85">{label}</div>
         </div>
       </div>
     </div>
@@ -160,48 +182,52 @@ export default function Dashboard() {
     <div className="space-y-6">
       {/* 统计卡片 + AI 快速添加按钮 */}
       <div className="flex items-stretch gap-4">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 flex-1">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 flex-1 stagger-children">
           <StatCard
             icon={<CalendarOutlined />}
             label="本周面试"
             value={stats.thisWeek}
-            color="#3b82f6"
+            gradient="linear-gradient(135deg, #3b82f6 0%, #6366f1 100%)"
+            glow="rgba(59, 130, 246, 0.3)"
           />
           <StatCard
             icon={<RocketOutlined />}
             label="进行中"
             value={stats.inProcess}
-            color="#0ea5e9"
+            gradient="linear-gradient(135deg, #0ea5e9 0%, #6366f1 100%)"
+            glow="rgba(14, 165, 233, 0.3)"
           />
           <StatCard
             icon={<TrophyOutlined />}
             label="已拿 Offer"
             value={stats.offers}
-            color="#22c55e"
+            gradient="linear-gradient(135deg, #22c55e 0%, #10b981 100%)"
+            glow="rgba(34, 197, 94, 0.3)"
           />
         </div>
         <Button
           icon={<RobotOutlined />}
           onClick={() => setAiQuickAddOpen(true)}
           style={{
-            backgroundColor: '#dc2626',
-            borderColor: '#dc2626',
+            background: 'linear-gradient(135deg, #ec4899 0%, #a855f7 100%)',
+            borderColor: 'transparent',
             color: 'white',
             fontSize: '16px',
             fontWeight: 'bold',
             height: 'auto',
             padding: '20px 24px',
+            boxShadow: '0 8px 32px rgba(236, 72, 153, 0.3)',
           }}
-          className="rounded-xl shadow-sm hover:shadow-md transition-shadow"
+          className="rounded-2xl hover:shadow-lg transition-shadow"
         >
           AI 快速添加
         </Button>
       </div>
 
       {/* 快速操作区 */}
-      <div className="bg-white rounded-xl p-5 border border-gray-100 shadow-sm">
+      <div className="glass-card rounded-2xl p-5">
         <div className="flex items-center justify-between mb-4">
-          <h3 className="text-base font-semibold text-gray-800">快速添加面试</h3>
+          <h3 className="text-base font-semibold" style={{ color: '#1e1b4b' }}>快速添加面试</h3>
           <Button
             type="primary"
             icon={<PlusOutlined />}
@@ -237,7 +263,7 @@ export default function Dashboard() {
       </div>
 
       {/* 日历 */}
-      <div className="bg-white rounded-xl border border-gray-100 shadow-sm">
+      <div className="glass-card rounded-2xl">
         <WeeklyCalendar
           interviews={interviews}
           onEventClick={handleEventClick}

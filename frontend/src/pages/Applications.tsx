@@ -186,7 +186,7 @@ export default function Applications() {
   return (
     <div className="space-y-4">
       <div className="flex justify-between items-center">
-        <h1 className="text-2xl font-bold text-gray-800">公司申请</h1>
+        <h1 className="text-2xl font-bold" style={{ color: '#1e1b4b' }}>公司申请</h1>
         <Button
           type="primary"
           icon={<PlusOutlined />}
@@ -196,7 +196,7 @@ export default function Applications() {
         </Button>
       </div>
 
-      <div className="bg-white rounded-lg shadow p-4">
+      <div className="glass-card rounded-2xl p-4">
         <div className="flex gap-2 mb-4">
           <Input
             placeholder="搜索公司或职位"

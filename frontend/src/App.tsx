@@ -12,10 +12,13 @@ import './App.css';
 
 const { Header, Content } = Layout;
 
-// 樱花飘落背景组件
+// 樱花飘落 + 渐变光球背景组件
 function BackgroundDecorations() {
   return (
     <div className="bg-decorations">
+      <div className="bg-orb bg-orb-1" />
+      <div className="bg-orb bg-orb-2" />
+      <div className="bg-orb bg-orb-3" />
       <div className="sakura sakura-1">🌸</div>
       <div className="sakura sakura-2">🌸</div>
       <div className="sakura sakura-3">🌸</div>
@@ -101,12 +104,15 @@ function AppLayout() {
       <Header
         className="flex items-center px-6"
         style={{
-          background: 'linear-gradient(135deg, #ec4899 0%, #f472b6 100%)',
-          boxShadow: '0 2px 8px rgba(236, 72, 153, 0.3)'
+          background: 'linear-gradient(135deg, #ec4899 0%, #a855f7 50%, #6366f1 100%)',
+          boxShadow: '0 4px 20px rgba(236, 72, 153, 0.35), 0 1px 3px rgba(0, 0, 0, 0.1)',
+          borderBottom: '1px solid rgba(255, 255, 255, 0.15)',
         }}
       >
         <div className="flex items-center mr-8">
-          <span className="text-xl font-semibold tracking-tight text-white">OfferMatrix</span>
+          <span className="text-xl font-bold tracking-tight text-white" style={{ textShadow: '0 2px 4px rgba(0,0,0,0.1)' }}>
+            🌸 OfferMatrix
+          </span>
         </div>
         <Menu
           theme="dark"
@@ -117,7 +123,18 @@ function AppLayout() {
           style={{ background: 'transparent' }}
         />
         <Dropdown menu={{ items: userMenuItems }} placement="bottomRight">
-          <div className="flex items-center cursor-pointer text-white hover:opacity-80">
+          <div
+            className="flex items-center cursor-pointer text-white"
+            style={{
+              padding: '4px 12px',
+              borderRadius: 8,
+              background: 'rgba(255,255,255,0.12)',
+              backdropFilter: 'blur(4px)',
+              transition: 'background 0.2s ease',
+            }}
+            onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(255,255,255,0.22)'; }}
+            onMouseLeave={(e) => { e.currentTarget.style.background = 'rgba(255,255,255,0.12)'; }}
+          >
             <UserOutlined className="mr-2" />
             <span>{user?.username}</span>
           </div>
@@ -159,16 +176,16 @@ function App() {
       locale={zhCN}
       theme={{
         token: {
-          colorPrimary: '#3b82f6',
-          colorText: '#334155',
-          colorTextSecondary: '#64748b',
-          borderRadius: 8,
+          colorPrimary: '#ec4899',
+          colorText: '#1e1b4b',
+          colorTextSecondary: '#6b7280',
+          borderRadius: 12,
         },
         components: {
           Menu: {
             darkItemBg: 'transparent',
-            darkItemSelectedBg: 'rgba(255,255,255,0.15)',
-            darkItemHoverBg: 'rgba(255,255,255,0.1)',
+            darkItemSelectedBg: 'rgba(255,255,255,0.2)',
+            darkItemHoverBg: 'rgba(255,255,255,0.12)',
           }
         }
       }}

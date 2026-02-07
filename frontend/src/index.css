@@ -1,13 +1,17 @@
 @import "tailwindcss";
 
 :root {
-  --primary-color: #3b82f6;
-  --primary-hover: #2563eb;
-  --bg-color: #f8fafc;
-  --card-bg: #ffffff;
-  --border-color: #e2e8f0;
-  --text-primary: #334155;
-  --text-secondary: #64748b;
+  --primary-color: #ec4899;
+  --primary-hover: #db2777;
+  --primary-light: #fce7f3;
+  --accent-purple: #a855f7;
+  --accent-indigo: #6366f1;
+  --bg-color: #fdf2f8;
+  --card-bg: rgba(255, 255, 255, 0.65);
+  --card-border: rgba(255, 255, 255, 0.5);
+  --border-color: rgba(236, 72, 153, 0.12);
+  --text-primary: #1e1b4b;
+  --text-secondary: #6b7280;
   --pink-light: #fce7f3;
   --pink-medium: #f9a8d4;
 }
@@ -15,9 +19,11 @@
 body {
   margin: 0;
   padding: 0;
-  background-color: var(--bg-color);
+  background: linear-gradient(135deg, #fdf2f8 0%, #f5f0ff 40%, #eff6ff 70%, #fdf2f8 100%);
+  background-attachment: fixed;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
   color: var(--text-primary);
+  min-height: 100vh;
 }
 
 /* 背景装饰动画 - 樱花飘落 */
@@ -42,10 +48,11 @@ body {
     opacity: 0.3;
   }
 }
-
-@keyframes sway {
-  0%, 100% { transform: translateX(0); }
-  50% { transform: translateX(30px); }
+/* 背景光球漂浮动画 */
+@keyframes float-orb {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(30px, -50px) scale(1.05); }
+  66% { transform: translate(-20px, 20px) scale(0.95); }
 }
 
 .bg-decorations {
@@ -59,6 +66,40 @@ body {
   overflow: hidden;
 }
 
+.bg-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0.4;
+  animation: float-orb 20s ease-in-out infinite;
+}
+
+.bg-orb-1 {
+  width: 400px;
+  height: 400px;
+  background: radial-gradient(circle, #f9a8d4 0%, transparent 70%);
+  top: 10%;
+  left: 10%;
+}
+
+.bg-orb-2 {
+  width: 350px;
+  height: 350px;
+  background: radial-gradient(circle, #c4b5fd 0%, transparent 70%);
+  top: 50%;
+  right: 10%;
+  animation-delay: -7s;
+}
+
+.bg-orb-3 {
+  width: 300px;
+  height: 300px;
+  background: radial-gradient(circle, #93c5fd 0%, transparent 70%);
+  bottom: 10%;
+  left: 30%;
+  animation-delay: -14s;
+}
+
 .sakura {
   position: absolute;
   top: -50px;
@@ -67,7 +108,6 @@ body {
   color: #f9a8d4;
   text-shadow: 0 0 10px rgba(249, 168, 212, 0.5);
 }
-
 .sakura-1 { left: 3%; animation: sakura-fall 12s linear infinite; animation-delay: 0s; }
 .sakura-2 { left: 8%; animation: sakura-fall-2 15s linear infinite; animation-delay: -2s; font-size: 16px; }
 .sakura-3 { left: 13%; animation: sakura-fall 10s linear infinite; animation-delay: -4s; font-size: 24px; }
@@ -89,6 +129,50 @@ body {
 .sakura-19 { left: 93%; animation: sakura-fall 12s linear infinite; animation-delay: -1s; }
 .sakura-20 { left: 97%; animation: sakura-fall-2 14s linear infinite; animation-delay: -5s; font-size: 16px; }
 
+/* 毛玻璃卡片工具类 */
+.glass-card {
+  background: rgba(255, 255, 255, 0.65);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  box-shadow:
+    0 4px 24px rgba(236, 72, 153, 0.06),
+    0 1px 3px rgba(0, 0, 0, 0.04),
+    inset 0 1px 0 rgba(255, 255, 255, 0.6);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.glass-card:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    0 8px 32px rgba(236, 72, 153, 0.1),
+    0 2px 8px rgba(0, 0, 0, 0.06),
+    inset 0 1px 0 rgba(255, 255, 255, 0.6);
+}
+
+/* 入场动画 */
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.stagger-children > * {
+  animation: fade-in-up 0.5s ease-out both;
+}
+.stagger-children > *:nth-child(1) { animation-delay: 0ms; }
+.stagger-children > *:nth-child(2) { animation-delay: 80ms; }
+.stagger-children > *:nth-child(3) { animation-delay: 160ms; }
+.stagger-children > *:nth-child(4) { animation-delay: 240ms; }
+.stagger-children > *:nth-child(5) { animation-delay: 320ms; }
+.stagger-children > *:nth-child(6) { animation-delay: 400ms; }
+.stagger-children > *:nth-child(7) { animation-delay: 480ms; }
+.stagger-children > *:nth-child(8) { animation-delay: 560ms; }
 /* 确保 Ant Design 组件文字颜色正常 */
 .ant-modal,
 .ant-modal-content,
@@ -112,17 +196,17 @@ body {
 }
 
 ::-webkit-scrollbar-track {
-  background: #f1f5f9;
+  background: rgba(252, 231, 243, 0.3);
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
+  background: #f9a8d4;
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #94a3b8;
+  background: #ec4899;
 }
 
 /* FullCalendar 样式调整 */
@@ -130,7 +214,6 @@ body {
   font-family: inherit;
 }
 
-/* 隐藏日历点击时的光标闪烁 */
 .fc * {
   caret-color: transparent !important;
 }
@@ -147,15 +230,14 @@ body {
   border-radius: 8px !important;
   padding: 8px 16px !important;
   border: 1px solid var(--border-color) !important;
-  background: var(--card-bg) !important;
+  background: rgba(255, 255, 255, 0.7) !important;
   color: var(--text-primary) !important;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05) !important;
   transition: all 0.2s ease !important;
 }
-
 .fc .fc-button:hover {
-  background: #f1f5f9 !important;
-  border-color: #cbd5e1 !important;
+  background: rgba(252, 231, 243, 0.5) !important;
+  border-color: rgba(236, 72, 153, 0.2) !important;
 }
 
 .fc .fc-button-primary:not(:disabled).fc-button-active,
@@ -163,6 +245,7 @@ body {
   background: var(--primary-color) !important;
   border-color: var(--primary-color) !important;
   color: white !important;
+  box-shadow: 0 2px 8px rgba(236, 72, 153, 0.3) !important;
 }
 
 .fc .fc-button-group > .fc-button {
@@ -188,7 +271,7 @@ body {
 }
 
 .fc .fc-col-header-cell {
-  background: #f8fafc;
+  background: rgba(252, 231, 243, 0.3);
   padding: 12px 0 !important;
 }
 
@@ -204,17 +287,18 @@ body {
 
 .fc-event {
   cursor: pointer;
-  border-radius: 6px !important;
+  border-radius: 8px !important;
   border: none !important;
   padding: 2px 6px !important;
   font-weight: 500;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+  transition: transform 0.2s ease, box-shadow 0.2s ease !important;
 }
 
 .fc-event:hover {
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18);
 }
-
 /* 日历事件内容显示优化 */
 .fc-event-main {
   white-space: normal !important;
@@ -250,21 +334,12 @@ body {
 
 /* 当前时间指示线样式 */
 .fc .fc-timegrid-now-indicator-line {
-  border-color: #ef4444 !important;
+  border-color: #ec4899 !important;
   border-width: 2px !important;
 }
 
 .fc .fc-timegrid-now-indicator-arrow {
   display: none !important;
-}
-
-/* 卡片样式 */
-.card-shadow {
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05), 0 1px 2px rgba(0, 0, 0, 0.1);
-}
-
-.card-shadow-lg {
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
 }
 
 /* Prose 样式 */
@@ -287,7 +362,6 @@ body {
 .prose ol {
   padding-left: 1.5em;
 }
-
 .prose code {
   background-color: #f3f4f6;
   padding: 0.125rem 0.25rem;
@@ -316,27 +390,44 @@ body {
   overflow: hidden;
 }
 
-/* Ant Design 覆盖 */
+/* Ant Design 覆盖 - 毛玻璃卡片 */
 .ant-card {
-  border-radius: 12px !important;
-  border: 1px solid var(--border-color) !important;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05) !important;
+  border-radius: 16px !important;
+  border: 1px solid rgba(255, 255, 255, 0.5) !important;
+  background: rgba(255, 255, 255, 0.65) !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+  box-shadow:
+    0 4px 24px rgba(236, 72, 153, 0.06),
+    0 1px 3px rgba(0, 0, 0, 0.04),
+    inset 0 1px 0 rgba(255, 255, 255, 0.6) !important;
+  transition: transform 0.3s ease, box-shadow 0.3s ease !important;
+}
+
+.ant-card:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    0 8px 32px rgba(236, 72, 153, 0.1),
+    0 2px 8px rgba(0, 0, 0, 0.06),
+    inset 0 1px 0 rgba(255, 255, 255, 0.6) !important;
 }
 
 .ant-card-head {
   border-bottom: 1px solid var(--border-color) !important;
 }
-
 .ant-btn-primary {
   background: var(--primary-color) !important;
   border-color: var(--primary-color) !important;
-  box-shadow: 0 2px 4px rgba(59, 130, 246, 0.25) !important;
+  box-shadow: 0 2px 8px rgba(236, 72, 153, 0.25) !important;
   color: #ffffff !important;
+  transition: all 0.3s ease !important;
 }
 
 .ant-btn-primary:hover {
   background: var(--primary-hover) !important;
   border-color: var(--primary-hover) !important;
+  box-shadow: 0 4px 16px rgba(236, 72, 153, 0.4) !important;
+  transform: translateY(-1px);
 }
 
 .ant-btn-primary:disabled {
@@ -344,45 +435,82 @@ body {
   border-color: #e2e8f0 !important;
   color: #94a3b8 !important;
   box-shadow: none !important;
+  transform: none !important;
 }
 
-/* 确保所有按钮文字清晰 */
 .ant-btn {
   color: var(--text-primary);
+  transition: all 0.2s ease !important;
 }
 
 .ant-btn-default {
   color: var(--text-primary) !important;
-  border-color: #d1d5db !important;
+  border-color: rgba(236, 72, 153, 0.2) !important;
 }
 
 .ant-btn-default:hover {
   color: var(--primary-color) !important;
   border-color: var(--primary-color) !important;
+  transform: translateY(-1px);
 }
 
+/* 表格增强 */
 .ant-table {
-  border-radius: 12px !important;
+  border-radius: 16px !important;
   overflow: hidden;
+  background: transparent !important;
 }
 
-.ant-table-thead > tr > th {
-  background: #f8fafc !important;
+.ant-table-thead > tr > th,
+.ant-table-thead > tr > td {
+  background: rgba(252, 231, 243, 0.5) !important;
   font-weight: 600 !important;
   color: var(--text-secondary) !important;
+  border-bottom: 2px solid rgba(236, 72, 153, 0.1) !important;
 }
 
+.ant-table-tbody > tr {
+  transition: all 0.2s ease !important;
+}
+
+.ant-table-tbody > tr:hover > td {
+  background: rgba(252, 231, 243, 0.3) !important;
+}
+
+.ant-table-tbody > tr > td {
+  border-bottom: 1px solid rgba(236, 72, 153, 0.06) !important;
+}
 .ant-drawer-header {
   border-bottom: 1px solid var(--border-color) !important;
 }
 
 .ant-modal-content {
   border-radius: 16px !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
 }
 
+/* 增强标签样式 */
 .ant-tag {
-  border-radius: 6px !important;
-  font-weight: 500 !important;
+  border-radius: 8px !important;
+  font-weight: 600 !important;
+  padding: 2px 10px !important;
+  border: none !important;
+}
+
+.ant-tag-blue {
+  background: linear-gradient(135deg, #dbeafe 0%, #e0e7ff 100%) !important;
+  color: #3b82f6 !important;
+}
+
+.ant-tag-green {
+  background: linear-gradient(135deg, #dcfce7 0%, #d1fae5 100%) !important;
+  color: #16a34a !important;
+}
+
+.ant-tag-red {
+  background: linear-gradient(135deg, #fee2e2 0%, #fce7f3 100%) !important;
+  color: #dc2626 !important;
 }
 
 /* 修复点击空白区域时的黑色闪烁问题 */
@@ -391,7 +519,6 @@ body {
   caret-color: transparent;
 }
 
-/* 只在真正的输入框中显示光标 */
 input,
 textarea,
 [contenteditable="true"] {
