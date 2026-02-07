@@ -16,6 +16,7 @@ export interface Interview {
   end_time: string;
   status: 'SCHEDULED' | 'FINISHED' | 'CANCELLED';
   meeting_link?: string;
+  notes?: string;
   review_content?: string;
   created_at: string;
   updated_at: string;
@@ -62,6 +63,7 @@ export interface CreateInterviewRequest {
   end_time: string;
   status?: string;
   meeting_link?: string;
+  notes?: string;
   review_content?: string;
 }
 
@@ -71,6 +73,7 @@ export interface UpdateInterviewRequest {
   end_time?: string;
   status?: 'SCHEDULED' | 'FINISHED' | 'CANCELLED';
   meeting_link?: string;
+  notes?: string;
   review_content?: string;
 }
 

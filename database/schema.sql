@@ -23,6 +23,7 @@ CREATE TABLE interviews (
     end_time DATETIME NOT NULL,
     status VARCHAR(20) DEFAULT 'SCHEDULED', -- SCHEDULED, FINISHED, CANCELLED
     meeting_link VARCHAR(500),
+    notes TEXT, -- 备注信息（会议号、面试官等）
     review_content TEXT, -- Markdown content for post-interview review
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,

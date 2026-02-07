@@ -45,6 +45,7 @@ export default function InterviewDrawer({
         end_time: dayjs(interview.end_time),
         status: interview.status,
         meeting_link: interview.meeting_link,
+        notes: interview.notes,
       });
       setReviewContent(interview.review_content || '');
     }
@@ -78,6 +79,7 @@ export default function InterviewDrawer({
         end_time: values.end_time.toISOString(),
         status: values.status as Interview['status'],
         meeting_link: values.meeting_link,
+        notes: values.notes,
       };
       await interviewApi.update(interview.id, data);
       message.success('保存成功');
@@ -137,14 +139,10 @@ export default function InterviewDrawer({
             rules={[{ required: true, message: '请选择面试轮次' }]}
           >
             <Select placeholder="请选择面试轮次">
-              <Select.Option value="AI面">AI面</Select.Option>
+              <Select.Option value="一面">一面</Select.Option>
+              <Select.Option value="二面">二面</Select.Option>
+              <Select.Option value="三面">三面</Select.Option>
               <Select.Option value="HR面">HR面</Select.Option>
-              <Select.Option value="业务一面">业务一面</Select.Option>
-              <Select.Option value="业务二面">业务二面</Select.Option>
-              <Select.Option value="业务三面">业务三面</Select.Option>
-              <Select.Option value="技术一面">技术一面</Select.Option>
-              <Select.Option value="技术二面">技术二面</Select.Option>
-              <Select.Option value="终面">终面</Select.Option>
             </Select>
           </Form.Item>
 
@@ -176,6 +174,13 @@ export default function InterviewDrawer({
             <Input
               prefix={<LinkOutlined />}
               placeholder="Zoom/腾讯会议链接"
+            />
+          </Form.Item>
+
+          <Form.Item name="notes" label="备注">
+            <Input.TextArea
+              rows={2}
+              placeholder="会议号、面试官信息等"
             />
           </Form.Item>
 

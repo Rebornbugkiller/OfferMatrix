@@ -53,6 +53,7 @@ export default function AddInterviewModal({
           end_time: values.end_time.toISOString(),
           status: values.status || 'SCHEDULED',
           meeting_link: values.meeting_link,
+          notes: values.notes,
         };
         await interviewApi.create(data);
         message.success('面试已添加');
@@ -102,14 +103,10 @@ export default function AddInterviewModal({
           label="面试轮次"
         >
           <Select placeholder="不选则只更新公司状态" allowClear>
-            <Select.Option value="AI面">AI面</Select.Option>
+            <Select.Option value="一面">一面</Select.Option>
+            <Select.Option value="二面">二面</Select.Option>
+            <Select.Option value="三面">三面</Select.Option>
             <Select.Option value="HR面">HR面</Select.Option>
-            <Select.Option value="业务一面">业务一面</Select.Option>
-            <Select.Option value="业务二面">业务二面</Select.Option>
-            <Select.Option value="业务三面">业务三面</Select.Option>
-            <Select.Option value="技术一面">技术一面</Select.Option>
-            <Select.Option value="技术二面">技术二面</Select.Option>
-            <Select.Option value="终面">终面</Select.Option>
           </Select>
         </Form.Item>
 
@@ -139,6 +136,10 @@ export default function AddInterviewModal({
 
         <Form.Item name="meeting_link" label="会议链接">
           <Input placeholder="Zoom/腾讯会议链接" />
+        </Form.Item>
+
+        <Form.Item name="notes" label="备注">
+          <Input.TextArea rows={2} placeholder="会议号、面试官信息等" />
         </Form.Item>
       </Form>
     </Modal>

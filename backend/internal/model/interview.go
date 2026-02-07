@@ -10,6 +10,7 @@ type Interview struct {
 	EndTime       time.Time `json:"end_time" gorm:"not null"`
 	Status        string    `json:"status" gorm:"type:varchar(20);default:SCHEDULED"`
 	MeetingLink   string    `json:"meeting_link" gorm:"type:varchar(500)"`
+	Notes         string    `json:"notes" gorm:"type:text"`
 	ReviewContent string    `json:"review_content" gorm:"type:text"`
 	CreatedAt     time.Time `json:"created_at" gorm:"autoCreateTime"`
 	UpdatedAt     time.Time `json:"updated_at" gorm:"autoUpdateTime"`
@@ -27,6 +28,7 @@ type CreateInterviewRequest struct {
 	EndTime       string `json:"end_time" binding:"required"`
 	Status        string `json:"status"`
 	MeetingLink   string `json:"meeting_link"`
+	Notes         string `json:"notes"`
 	ReviewContent string `json:"review_content"`
 }
 
@@ -36,6 +38,7 @@ type UpdateInterviewRequest struct {
 	EndTime       string `json:"end_time"`
 	Status        string `json:"status"`
 	MeetingLink   string `json:"meeting_link"`
+	Notes         string `json:"notes"`
 	ReviewContent string `json:"review_content"`
 }
 
