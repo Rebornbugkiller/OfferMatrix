@@ -15,6 +15,7 @@ import {
   SearchOutlined,
   DeleteOutlined,
   EyeOutlined,
+  FilterOutlined,
 } from '@ant-design/icons';
 import type { ColumnsType } from 'antd/es/table';
 import type { Application } from '../types';
@@ -26,12 +27,13 @@ export default function Applications() {
   const [applications, setApplications] = useState<Application[]>([]);
   const [loading, setLoading] = useState(false);
   const [keyword, setKeyword] = useState('');
+  const [selectedStatuses, setSelectedStatuses] = useState<string[]>([]);
   const [formOpen, setFormOpen] = useState(false);
 
-  const fetchApplications = useCallback(async (search?: string) => {
+  const fetchApplications = useCallback(async (search?: string, statuses?: string[]) => {
     try {
       setLoading(true);
-      const res = await applicationApi.list(search);
+      const res = await applicationApi.list(search, statuses);
       setApplications(res.data);
     } catch (error) {
       message.error('获取申请列表失败');
@@ -45,7 +47,12 @@ export default function Applications() {
   }, [fetchApplications]);
 
   const handleSearch = () => {
-    fetchApplications(keyword);
+    fetchApplications(keyword, selectedStatuses);
+  };
+
+  const handleStatusFilterChange = (values: string[]) => {
+    setSelectedStatuses(values);
+    fetchApplications(keyword, values);
   };
 
   const handleStatusChange = useCallback(async (id: number, status: Application['current_status']) => {
@@ -199,6 +206,25 @@ export default function Applications() {
             prefix={<SearchOutlined />}
             style={{ width: 300 }}
           />
+          <Select
+            mode="multiple"
+            placeholder="筛选状态"
+            value={selectedStatuses}
+            onChange={handleStatusFilterChange}
+            style={{ width: 240 }}
+            allowClear
+            suffixIcon={<FilterOutlined />}
+          >
+            <Select.Option value="IN_PROCESS">
+              <Tag color="blue">进行中</Tag>
+            </Select.Option>
+            <Select.Option value="OFFER">
+              <Tag color="green">已拿 Offer</Tag>
+            </Select.Option>
+            <Select.Option value="REJECTED">
+              <Tag color="red">已拒绝</Tag>
+            </Select.Option>
+          </Select>
           <Button onClick={handleSearch}>搜索</Button>
         </div>
 
@@ -214,7 +240,7 @@ export default function Applications() {
       <ApplicationForm
         open={formOpen}
         onClose={() => setFormOpen(false)}
-        onSuccess={() => fetchApplications(keyword)}
+        onSuccess={() => fetchApplications(keyword, selectedStatuses)}
       />
     </div>
   );

@@ -1,13 +1,15 @@
 @import "tailwindcss";
 
 :root {
-  --primary-color: #4f46e5;
-  --primary-hover: #4338ca;
+  --primary-color: #3b82f6;
+  --primary-hover: #2563eb;
   --bg-color: #f8fafc;
   --card-bg: #ffffff;
   --border-color: #e2e8f0;
-  --text-primary: #1e293b;
+  --text-primary: #334155;
   --text-secondary: #64748b;
+  --pink-light: #fce7f3;
+  --pink-medium: #f9a8d4;
 }
 
 body {
@@ -15,6 +17,92 @@ body {
   padding: 0;
   background-color: var(--bg-color);
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  color: var(--text-primary);
+}
+
+/* 背景装饰动画 - 樱花飘落 */
+@keyframes sakura-fall {
+  0% {
+    transform: translateY(-10vh) translateX(0) rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(110vh) translateX(100px) rotate(720deg);
+    opacity: 0.3;
+  }
+}
+
+@keyframes sakura-fall-2 {
+  0% {
+    transform: translateY(-10vh) translateX(0) rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(110vh) translateX(-80px) rotate(-540deg);
+    opacity: 0.3;
+  }
+}
+
+@keyframes sway {
+  0%, 100% { transform: translateX(0); }
+  50% { transform: translateX(30px); }
+}
+
+.bg-decorations {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.sakura {
+  position: absolute;
+  top: -50px;
+  opacity: 0.6;
+  font-size: 20px;
+  color: #f9a8d4;
+  text-shadow: 0 0 10px rgba(249, 168, 212, 0.5);
+}
+
+.sakura-1 { left: 3%; animation: sakura-fall 12s linear infinite; animation-delay: 0s; }
+.sakura-2 { left: 8%; animation: sakura-fall-2 15s linear infinite; animation-delay: -2s; font-size: 16px; }
+.sakura-3 { left: 13%; animation: sakura-fall 10s linear infinite; animation-delay: -4s; font-size: 24px; }
+.sakura-4 { left: 18%; animation: sakura-fall-2 14s linear infinite; animation-delay: -1s; }
+.sakura-5 { left: 23%; animation: sakura-fall 11s linear infinite; animation-delay: -6s; font-size: 18px; }
+.sakura-6 { left: 28%; animation: sakura-fall-2 13s linear infinite; animation-delay: -3s; font-size: 22px; }
+.sakura-7 { left: 33%; animation: sakura-fall 16s linear infinite; animation-delay: -5s; }
+.sakura-8 { left: 38%; animation: sakura-fall-2 12s linear infinite; animation-delay: -7s; font-size: 14px; }
+.sakura-9 { left: 43%; animation: sakura-fall 14s linear infinite; animation-delay: -2s; font-size: 26px; }
+.sakura-10 { left: 48%; animation: sakura-fall-2 11s linear infinite; animation-delay: -4s; }
+.sakura-11 { left: 53%; animation: sakura-fall 13s linear infinite; animation-delay: -8s; font-size: 17px; }
+.sakura-12 { left: 58%; animation: sakura-fall-2 15s linear infinite; animation-delay: -1s; font-size: 21px; }
+.sakura-13 { left: 63%; animation: sakura-fall 10s linear infinite; animation-delay: -5s; }
+.sakura-14 { left: 68%; animation: sakura-fall-2 12s linear infinite; animation-delay: -3s; font-size: 15px; }
+.sakura-15 { left: 73%; animation: sakura-fall 14s linear infinite; animation-delay: -6s; font-size: 23px; }
+.sakura-16 { left: 78%; animation: sakura-fall-2 11s linear infinite; animation-delay: -2s; }
+.sakura-17 { left: 83%; animation: sakura-fall 16s linear infinite; animation-delay: -7s; font-size: 19px; }
+.sakura-18 { left: 88%; animation: sakura-fall-2 13s linear infinite; animation-delay: -4s; font-size: 25px; }
+.sakura-19 { left: 93%; animation: sakura-fall 12s linear infinite; animation-delay: -1s; }
+.sakura-20 { left: 97%; animation: sakura-fall-2 14s linear infinite; animation-delay: -5s; font-size: 16px; }
+
+/* 确保 Ant Design 组件文字颜色正常 */
+.ant-modal,
+.ant-modal-content,
+.ant-form,
+.ant-form-item,
+.ant-input,
+.ant-select,
+.ant-btn {
+  color: var(--text-primary);
+}
+
+.ant-input::placeholder,
+.ant-select-selection-placeholder {
+  color: #9ca3af !important;
 }
 
 /* 自定义滚动条 */
@@ -242,12 +330,35 @@ body {
 .ant-btn-primary {
   background: var(--primary-color) !important;
   border-color: var(--primary-color) !important;
-  box-shadow: 0 2px 4px rgba(79, 70, 229, 0.3) !important;
+  box-shadow: 0 2px 4px rgba(59, 130, 246, 0.25) !important;
+  color: #ffffff !important;
 }
 
 .ant-btn-primary:hover {
   background: var(--primary-hover) !important;
   border-color: var(--primary-hover) !important;
+}
+
+.ant-btn-primary:disabled {
+  background: #e2e8f0 !important;
+  border-color: #e2e8f0 !important;
+  color: #94a3b8 !important;
+  box-shadow: none !important;
+}
+
+/* 确保所有按钮文字清晰 */
+.ant-btn {
+  color: var(--text-primary);
+}
+
+.ant-btn-default {
+  color: var(--text-primary) !important;
+  border-color: #d1d5db !important;
+}
+
+.ant-btn-default:hover {
+  color: var(--primary-color) !important;
+  border-color: var(--primary-color) !important;
 }
 
 .ant-table {
@@ -272,4 +383,26 @@ body {
 .ant-tag {
   border-radius: 6px !important;
   font-weight: 500 !important;
+}
+
+/* 修复点击空白区域时的黑色闪烁问题 */
+.ant-layout,
+.ant-layout-content {
+  caret-color: transparent;
+}
+
+/* 只在真正的输入框中显示光标 */
+input,
+textarea,
+[contenteditable="true"] {
+  caret-color: auto;
+}
+
+*:focus {
+  outline: none !important;
+}
+
+*:focus-visible {
+  outline: 2px solid var(--primary-color) !important;
+  outline-offset: 2px !important;
 }

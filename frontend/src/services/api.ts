@@ -54,8 +54,13 @@ export const authApi = {
 
 // Applications API
 export const applicationApi = {
-  list: (keyword?: string) =>
-    api.get<Application[]>('/applications', { params: { keyword } }),
+  list: (keyword?: string, statuses?: string[]) =>
+    api.get<Application[]>('/applications', {
+      params: {
+        keyword,
+        status: statuses?.length ? statuses.join(',') : undefined,
+      },
+    }),
 
   get: (id: number) => api.get<Application>(`/applications/${id}`),
 

@@ -59,3 +59,20 @@ func (r *ApplicationRepository) Search(keyword string) ([]model.Application, err
 		Find(&apps).Error
 	return apps, err
 }
+
+func (r *ApplicationRepository) SearchWithFilters(keyword string, statuses []string) ([]model.Application, error) {
+	var apps []model.Application
+	query := r.db.Model(&model.Application{})
+
+	if keyword != "" {
+		query = query.Where("company_name LIKE ? OR job_title LIKE ?",
+			"%"+keyword+"%", "%"+keyword+"%")
+	}
+
+	if len(statuses) > 0 {
+		query = query.Where("current_status IN ?", statuses)
+	}
+
+	err := query.Order("updated_at DESC").Find(&apps).Error
+	return apps, err
+}

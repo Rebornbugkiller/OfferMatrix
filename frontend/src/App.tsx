@@ -12,6 +12,34 @@ import './App.css';
 
 const { Header, Content } = Layout;
 
+// 樱花飘落背景组件
+function BackgroundDecorations() {
+  return (
+    <div className="bg-decorations">
+      <div className="sakura sakura-1">🌸</div>
+      <div className="sakura sakura-2">🌸</div>
+      <div className="sakura sakura-3">🌸</div>
+      <div className="sakura sakura-4">🌸</div>
+      <div className="sakura sakura-5">🌸</div>
+      <div className="sakura sakura-6">🌸</div>
+      <div className="sakura sakura-7">🌸</div>
+      <div className="sakura sakura-8">🌸</div>
+      <div className="sakura sakura-9">🌸</div>
+      <div className="sakura sakura-10">🌸</div>
+      <div className="sakura sakura-11">🌸</div>
+      <div className="sakura sakura-12">🌸</div>
+      <div className="sakura sakura-13">🌸</div>
+      <div className="sakura sakura-14">🌸</div>
+      <div className="sakura sakura-15">🌸</div>
+      <div className="sakura sakura-16">🌸</div>
+      <div className="sakura sakura-17">🌸</div>
+      <div className="sakura sakura-18">🌸</div>
+      <div className="sakura sakura-19">🌸</div>
+      <div className="sakura sakura-20">🌸</div>
+    </div>
+  );
+}
+
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const { user, loading } = useAuth();
 
@@ -68,16 +96,17 @@ function AppLayout() {
   ];
 
   return (
-    <Layout className="min-h-screen">
+    <Layout className="min-h-screen" style={{ position: 'relative' }}>
+      <BackgroundDecorations />
       <Header
         className="flex items-center px-6"
         style={{
-          background: 'linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%)',
-          boxShadow: '0 2px 8px rgba(79, 70, 229, 0.3)'
+          background: 'linear-gradient(135deg, #ec4899 0%, #f472b6 100%)',
+          boxShadow: '0 2px 8px rgba(236, 72, 153, 0.3)'
         }}
       >
         <div className="flex items-center mr-8">
-          <span className="text-white text-xl font-semibold tracking-tight">OfferMatrix</span>
+          <span className="text-xl font-semibold tracking-tight text-white">OfferMatrix</span>
         </div>
         <Menu
           theme="dark"
@@ -94,7 +123,7 @@ function AppLayout() {
           </div>
         </Dropdown>
       </Header>
-      <Content className="p-6" style={{ background: '#f8fafc' }}>
+      <Content className="p-6" style={{ background: 'transparent', position: 'relative', zIndex: 1 }}>
         <div className="max-w-7xl mx-auto">
           <Routes>
             <Route path="/" element={<Dashboard />} />
@@ -130,7 +159,9 @@ function App() {
       locale={zhCN}
       theme={{
         token: {
-          colorPrimary: '#4f46e5',
+          colorPrimary: '#3b82f6',
+          colorText: '#334155',
+          colorTextSecondary: '#64748b',
           borderRadius: 8,
         },
         components: {

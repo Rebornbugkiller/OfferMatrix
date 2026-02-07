@@ -5,11 +5,13 @@ import {
   CalendarOutlined,
   RocketOutlined,
   TrophyOutlined,
+  RobotOutlined,
 } from '@ant-design/icons';
 import WeeklyCalendar from '../components/WeeklyCalendar';
 import InterviewDrawer from '../components/InterviewDrawer';
 import ApplicationForm from '../components/ApplicationForm';
 import AddInterviewModal from '../components/AddInterviewModal';
+import AIQuickAddModal from '../components/AIQuickAddModal';
 import type { Interview, Application } from '../types';
 import { interviewApi, applicationApi } from '../services/api';
 
@@ -47,6 +49,7 @@ export default function Dashboard() {
   const [appFormOpen, setAppFormOpen] = useState(false);
   const [interviewModalOpen, setInterviewModalOpen] = useState(false);
   const [selectedApp, setSelectedApp] = useState<Application | null>(null);
+  const [aiQuickAddOpen, setAiQuickAddOpen] = useState(false);
 
   const fetchInterviews = useCallback(async () => {
     try {
@@ -155,26 +158,44 @@ export default function Dashboard() {
 
   return (
     <div className="space-y-6">
-      {/* 统计卡片 */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <StatCard
-          icon={<CalendarOutlined />}
-          label="本周面试"
-          value={stats.thisWeek}
-          color="#4f46e5"
-        />
-        <StatCard
-          icon={<RocketOutlined />}
-          label="进行中"
-          value={stats.inProcess}
-          color="#0ea5e9"
-        />
-        <StatCard
-          icon={<TrophyOutlined />}
-          label="已拿 Offer"
-          value={stats.offers}
-          color="#22c55e"
-        />
+      {/* 统计卡片 + AI 快速添加按钮 */}
+      <div className="flex items-stretch gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 flex-1">
+          <StatCard
+            icon={<CalendarOutlined />}
+            label="本周面试"
+            value={stats.thisWeek}
+            color="#3b82f6"
+          />
+          <StatCard
+            icon={<RocketOutlined />}
+            label="进行中"
+            value={stats.inProcess}
+            color="#0ea5e9"
+          />
+          <StatCard
+            icon={<TrophyOutlined />}
+            label="已拿 Offer"
+            value={stats.offers}
+            color="#22c55e"
+          />
+        </div>
+        <Button
+          icon={<RobotOutlined />}
+          onClick={() => setAiQuickAddOpen(true)}
+          style={{
+            backgroundColor: '#dc2626',
+            borderColor: '#dc2626',
+            color: 'white',
+            fontSize: '16px',
+            fontWeight: 'bold',
+            height: 'auto',
+            padding: '20px 24px',
+          }}
+          className="rounded-xl shadow-sm hover:shadow-md transition-shadow"
+        >
+          AI 快速添加
+        </Button>
       </div>
 
       {/* 快速操作区 */}
@@ -202,7 +223,7 @@ export default function Dashboard() {
                     ? { borderColor: '#ef4444', color: '#dc2626', backgroundColor: '#fef2f2' }
                     : undefined
                 }
-                className={app.current_status === 'IN_PROCESS' ? 'hover:border-indigo-400 hover:text-indigo-600' : ''}
+                className={app.current_status === 'IN_PROCESS' ? 'hover:border-blue-400 hover:text-blue-600' : ''}
               >
                 {app.company_name}
                 {app.current_status === 'OFFER' && ' ✓'}
@@ -255,6 +276,16 @@ export default function Dashboard() {
         onApplicationUpdate={() => {
           fetchApplications();
         }}
+      />
+
+      <AIQuickAddModal
+        open={aiQuickAddOpen}
+        onClose={() => setAiQuickAddOpen(false)}
+        onSuccess={() => {
+          fetchInterviews();
+          fetchApplications();
+        }}
+        applications={applications}
       />
     </div>
   );

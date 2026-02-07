@@ -3,6 +3,7 @@ package handler
 import (
 	"net/http"
 	"strconv"
+	"strings"
 
 	"github.com/gin-gonic/gin"
 	"offermatrix/internal/model"
@@ -31,17 +32,17 @@ func (h *ApplicationHandler) RegisterRoutes(r *gin.RouterGroup) {
 // List godoc
 // @Summary List all applications
 // @Param keyword query string false "Search keyword"
+// @Param status query string false "Status filter (comma-separated: IN_PROCESS,OFFER,REJECTED)"
 func (h *ApplicationHandler) List(c *gin.Context) {
 	keyword := c.Query("keyword")
+	statusParam := c.Query("status")
 
-	var apps []model.Application
-	var err error
-
-	if keyword != "" {
-		apps, err = h.repo.Search(keyword)
-	} else {
-		apps, err = h.repo.FindAll()
+	var statuses []string
+	if statusParam != "" {
+		statuses = strings.Split(statusParam, ",")
 	}
+
+	apps, err := h.repo.SearchWithFilters(keyword, statuses)
 
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})

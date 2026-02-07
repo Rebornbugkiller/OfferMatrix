@@ -73,3 +73,13 @@ export interface UpdateInterviewRequest {
   meeting_link?: string;
   review_content?: string;
 }
+
+// AI 解析面试结果
+export interface ParsedInterview {
+  company_name: string | null;
+  round_name: string | null;
+  start_time: string | null;
+  end_time: string | null;
+  meeting_link: string | null;
+  confidence: number;
+}
