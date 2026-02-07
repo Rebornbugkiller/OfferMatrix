@@ -90,10 +90,20 @@ ${text}`;
 // 调用 OpenAI 兼容 API
 async function callOpenAICompatible(
   config: LLMConfig,
-  prompt: string
+  prompt: string,
+  maxTokens?: number
 ): Promise<string> {
   const baseUrl = config.baseUrl || DEFAULT_BASE_URLS[config.provider];
   const model = config.model || DEFAULT_MODELS[config.provider];
+
+  const body: Record<string, unknown> = {
+    model,
+    messages: [{ role: 'user', content: prompt }],
+    temperature: 0.1,
+  };
+  if (maxTokens) {
+    body.max_tokens = maxTokens;
+  }
 
   const response = await fetch(`${baseUrl}/chat/completions`, {
     method: 'POST',
@@ -101,11 +111,7 @@ async function callOpenAICompatible(
       'Content-Type': 'application/json',
       Authorization: `Bearer ${config.apiKey}`,
     },
-    body: JSON.stringify({
-      model,
-      messages: [{ role: 'user', content: prompt }],
-      temperature: 0.1,
-    }),
+    body: JSON.stringify(body),
   });
 
   if (!response.ok) {
@@ -118,7 +124,7 @@ async function callOpenAICompatible(
 }
 
 // 调用 Claude API
-async function callClaude(config: LLMConfig, prompt: string): Promise<string> {
+async function callClaude(config: LLMConfig, prompt: string, maxTokens: number = 1024): Promise<string> {
   const baseUrl = config.baseUrl || DEFAULT_BASE_URLS.claude;
   const model = config.model || DEFAULT_MODELS.claude;
 
@@ -132,7 +138,7 @@ async function callClaude(config: LLMConfig, prompt: string): Promise<string> {
     },
     body: JSON.stringify({
       model,
-      max_tokens: 1024,
+      max_tokens: maxTokens,
       messages: [{ role: 'user', content: prompt }],
     }),
   });
@@ -200,4 +206,72 @@ export async function testLLMConnection(config: LLMConfig): Promise<boolean> {
   } catch {
     return false;
   }
+}
+
+// 构建 JD 分析 Prompt
+function buildJDAnalysisPrompt(
+  jdText: string,
+  companyName: string,
+  jobTitle: string,
+  salary: string
+): string {
+  return `你是一位资深的职业顾问和行业分析师。我已经拿到了这家公司的 Offer，请帮我分析这个职位，辅助我做 Offer 决策。
+
+## 公司信息
+- 公司名称：${companyName}
+- 职位名称：${jobTitle}
+- 薪资待遇：${salary || '未提供'}
+
+## 职位描述（JD）
+${jdText}
+
+## 分析要求
+请结合 JD 内容以及你对该公司和行业的了解，从以下几个维度进行分析。请用 Markdown 格式输出：
+
+### 核心职责
+提炼 3-5 条该职位的核心工作职责，用简洁的语言概括。
+
+### 技术栈与技能要求
+列出该职位涉及的关键技术栈和能力要求。
+
+### 岗位优势
+分析这个 Offer 的吸引力，包括但不限于：
+- 技术成长空间和发展前景
+- 业务前景和团队优势
+- 公司平台和行业地位
+
+### 潜在顾虑
+客观分析可能的缺点或风险，包括但不限于：
+- 加班文化、工作强度
+- 技术天花板
+- 业务稳定性
+
+### 薪资与市场分析
+结合提供的薪资信息（${salary || '未提供'}）和你对 ${companyName} 该岗位市场行情的了解，分析薪资竞争力。
+
+请直接输出 Markdown 内容，不要包裹在代码块中。`;
+}
+
+// 分析 JD
+export async function analyzeJD(
+  jdText: string,
+  companyName: string,
+  jobTitle: string,
+  salary: string
+): Promise<string> {
+  const config = getLLMConfig();
+  if (!config) {
+    throw new Error('请先配置 LLM');
+  }
+
+  const prompt = buildJDAnalysisPrompt(jdText, companyName, jobTitle, salary);
+  let responseText: string;
+
+  if (config.provider === 'claude') {
+    responseText = await callClaude(config, prompt, 4096);
+  } else {
+    responseText = await callOpenAICompatible(config, prompt, 4096);
+  }
+
+  return responseText;
 }

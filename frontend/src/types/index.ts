@@ -3,6 +3,9 @@ export interface Application {
   company_name: string;
   job_title: string;
   current_status: 'IN_PROCESS' | 'OFFER' | 'REJECTED';
+  salary?: string;
+  job_description?: string;
+  jd_analysis?: string;
   created_at: string;
   updated_at: string;
   interviews?: Interview[];
@@ -54,6 +57,9 @@ export interface UpdateApplicationRequest {
   company_name?: string;
   job_title?: string;
   current_status?: 'IN_PROCESS' | 'OFFER' | 'REJECTED';
+  salary?: string;
+  job_description?: string;
+  jd_analysis?: string;
 }
 
 export interface CreateInterviewRequest {

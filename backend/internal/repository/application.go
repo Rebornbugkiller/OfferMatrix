@@ -37,9 +37,12 @@ func (r *ApplicationRepository) FindByID(id int64) (*model.Application, error) {
 
 func (r *ApplicationRepository) Update(app *model.Application) error {
 	return r.db.Model(app).Updates(map[string]interface{}{
-		"company_name":   app.CompanyName,
-		"job_title":      app.JobTitle,
-		"current_status": app.CurrentStatus,
+		"company_name":    app.CompanyName,
+		"job_title":       app.JobTitle,
+		"current_status":  app.CurrentStatus,
+		"salary":          app.Salary,
+		"job_description": app.JobDescription,
+		"jd_analysis":     app.JDAnalysis,
 	}).Error
 }
 

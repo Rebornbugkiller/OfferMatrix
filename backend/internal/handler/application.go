@@ -127,6 +127,15 @@ func (h *ApplicationHandler) Update(c *gin.Context) {
 	if req.CurrentStatus != "" {
 		app.CurrentStatus = req.CurrentStatus
 	}
+	if req.Salary != "" {
+		app.Salary = req.Salary
+	}
+	if req.JobDescription != "" {
+		app.JobDescription = req.JobDescription
+	}
+	if req.JDAnalysis != "" {
+		app.JDAnalysis = req.JDAnalysis
+	}
 
 	if err := h.repo.Update(app); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})

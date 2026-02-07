@@ -6,6 +6,9 @@ import Dashboard from './pages/Dashboard';
 import Applications from './pages/Applications';
 import ApplicationDetail from './pages/ApplicationDetail';
 import Statistics from './pages/Statistics';
+import WeekInterviews from './pages/WeekInterviews';
+import InProcess from './pages/InProcess';
+import Offers from './pages/Offers';
 import Login from './pages/Login';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import './App.css';
@@ -87,7 +90,9 @@ function AppLayout() {
     ? '/applications'
     : location.pathname.startsWith('/statistics')
     ? '/statistics'
-    : '/';
+    : location.pathname === '/'
+    ? '/'
+    : '';
 
   const userMenuItems = [
     {
@@ -147,6 +152,9 @@ function AppLayout() {
             <Route path="/applications" element={<Applications />} />
             <Route path="/applications/:id" element={<ApplicationDetail />} />
             <Route path="/statistics" element={<Statistics />} />
+            <Route path="/week-interviews" element={<WeekInterviews />} />
+            <Route path="/in-process" element={<InProcess />} />
+            <Route path="/offers" element={<Offers />} />
           </Routes>
         </div>
       </Content>

@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback, useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Button, message } from 'antd';
 import {
   PlusOutlined,
@@ -21,17 +22,19 @@ interface StatCardProps {
   value: number;
   gradient: string;
   glow: string;
+  onClick?: () => void;
 }
 
-function StatCard({ icon, label, value, gradient, glow }: StatCardProps) {
+function StatCard({ icon, label, value, gradient, glow, onClick }: StatCardProps) {
   return (
     <div
-      className="rounded-2xl p-5 text-white relative overflow-hidden cursor-default"
+      className="rounded-2xl p-5 text-white relative overflow-hidden cursor-pointer"
       style={{
         background: gradient,
         boxShadow: `0 8px 32px ${glow}`,
         transition: 'transform 0.3s ease, box-shadow 0.3s ease',
       }}
+      onClick={onClick}
       onMouseEnter={(e) => {
         e.currentTarget.style.transform = 'translateY(-4px) scale(1.02)';
       }}
@@ -64,6 +67,7 @@ function StatCard({ icon, label, value, gradient, glow }: StatCardProps) {
 }
 
 export default function Dashboard() {
+  const navigate = useNavigate();
   const [interviews, setInterviews] = useState<Interview[]>([]);
   const [applications, setApplications] = useState<Application[]>([]);
   const [selectedInterview, setSelectedInterview] = useState<Interview | null>(null);
@@ -189,6 +193,7 @@ export default function Dashboard() {
             value={stats.thisWeek}
             gradient="linear-gradient(135deg, #3b82f6 0%, #6366f1 100%)"
             glow="rgba(59, 130, 246, 0.3)"
+            onClick={() => navigate('/week-interviews')}
           />
           <StatCard
             icon={<RocketOutlined />}
@@ -196,6 +201,7 @@ export default function Dashboard() {
             value={stats.inProcess}
             gradient="linear-gradient(135deg, #0ea5e9 0%, #6366f1 100%)"
             glow="rgba(14, 165, 233, 0.3)"
+            onClick={() => navigate('/in-process')}
           />
           <StatCard
             icon={<TrophyOutlined />}
@@ -203,6 +209,7 @@ export default function Dashboard() {
             value={stats.offers}
             gradient="linear-gradient(135deg, #22c55e 0%, #10b981 100%)"
             glow="rgba(34, 197, 94, 0.3)"
+            onClick={() => navigate('/offers')}
           />
         </div>
         <Button
